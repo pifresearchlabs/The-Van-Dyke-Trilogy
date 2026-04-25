@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Proxy Problem — Paid In Full</title>
+<style>
+  :root {
+    --text: rgb(55, 53, 47);
+    --text-light: rgba(55, 53, 47, 0.65);
+    --text-muted: rgba(55, 53, 47, 0.45);
+    --rule: rgba(55, 53, 47, 0.09);
+    --rule-strong: rgba(55, 53, 47, 0.16);
+    --bg: #ffffff;
+    --bg-gray: rgb(247, 246, 243);
+    --bg-blue: rgb(231, 243, 248);
+    --bg-yellow: rgb(251, 243, 219);
+    --bg-red: rgb(251, 228, 228);
+    --bg-green: rgb(221, 237, 234);
+    --bg-orange: rgb(250, 235, 221);
+    --bg-purple: rgb(244, 240, 247);
+    --code-bg: rgba(135, 131, 120, 0.15);
+    --code-text: #eb5757;
+    --link: rgb(35, 131, 226);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 Helvetica, "Apple Color Emoji", Arial, sans-serif,
+                 "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text); background: var(--bg);
+    font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .page { max-width: 900px; margin: 0 auto; padding: 60px 96px 200px; }
+  @media (max-width: 768px) { .page { padding: 40px 24px 120px; } }
+
+  .page-icon { font-size: 78px; line-height: 1; margin-bottom: 16px; user-select: none; }
+  h1.page-title {
+    font-size: 40px; font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.022em; margin-bottom: 8px;
+  }
+  .page-meta {
+    display: flex; flex-wrap: wrap; gap: 12px 28px;
+    margin: 28px 0 8px; padding: 12px 0; font-size: 14px; color: var(--text-light);
+  }
+  .page-meta .field { display: flex; gap: 10px; align-items: center; min-width: 200px; }
+  .page-meta .field-name { color: var(--text-muted); font-size: 13px; min-width: 110px; }
+  .page-meta .field-val { color: var(--text); }
+  .tag { background: var(--bg-gray); padding: 2px 8px; border-radius: 3px; font-size: 12px; color: var(--text); }
+  .tag.green { background: var(--bg-green); }
+  .tag.red { background: var(--bg-red); }
+  .tag.yellow { background: var(--bg-yellow); }
+  .tag.purple { background: var(--bg-purple); }
+
+  hr.divider { border: none; height: 1px; background: var(--rule); margin: 24px 0; }
+
+  h2 { font-size: 30px; font-weight: 700; line-height: 1.3; margin: 36px 0 4px; letter-spacing: -0.012em; }
+  h3 { font-size: 24px; font-weight: 600; line-height: 1.3; margin: 28px 0 4px; }
+
+  p { margin: 6px 0; padding: 3px 2px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    background: var(--code-bg); color: var(--code-text);
+    padding: 2px 6px; border-radius: 3px; font-size: 0.85em;
+  }
+
+  .callout {
+    display: flex; gap: 12px; padding: 16px 16px 16px 14px;
+    margin: 8px 0; border-radius: 4px; background: var(--bg-gray); align-items: flex-start;
+  }
+  .callout.blue { background: var(--bg-blue); }
+  .callout.yellow { background: var(--bg-yellow); }
+  .callout.red { background: var(--bg-red); }
+  .callout.green { background: var(--bg-green); }
+  .callout.orange { background: var(--bg-orange); }
+  .callout.purple { background: var(--bg-purple); }
+  .callout-icon { font-size: 18px; line-height: 1.5; user-select: none; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.55; }
+  .callout-body p { padding: 0; margin: 0; }
+  .callout-body p + p { margin-top: 8px; }
+
+  blockquote {
+    border-left: 3px solid var(--text); padding: 4px 0 4px 14px;
+    margin: 10px 0; font-size: 18px; line-height: 1.5;
+  }
+
+  ul, ol { margin: 4px 0; padding-left: 28px; }
+  li { padding: 3px 2px; line-height: 1.55; }
+
+  .table-wrap { margin: 14px 0; overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; padding: 10px 14px; background: var(--bg-gray);
+    font-weight: 600; font-size: 12px; color: var(--text-light);
+    border-bottom: 1px solid var(--rule-strong); border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule); vertical-align: top;
+  }
+  td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.wallet {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 13px; color: var(--text);
+  }
+  tr:hover td { background: rgba(55, 53, 47, 0.025); }
+  tr.highlight td { background: var(--bg-yellow); }
+
+  /* LAYER DIAGRAM */
+  .layers {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--bg-gray);
+    border-radius: 4px;
+  }
+  .layer {
+    padding: 14px 16px;
+    margin-bottom: 6px;
+    background: var(--bg);
+    border-radius: 3px;
+    border-left: 3px solid var(--rule-strong);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .layer:last-child { margin-bottom: 0; }
+  .layer .l-label {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 11px; letter-spacing: 0.05em;
+    color: var(--text-muted); margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .layer .l-text { color: var(--text); }
+  .layer .l-text strong { color: var(--text); }
+  .layer.public { border-left-color: #37a068; }
+  .layer.subpoena { border-left-color: #d9730d; }
+  .layer.hidden { border-left-color: #e03e3e; }
+
+  .trilogy-nav {
+    margin: 24px 0; padding: 16px;
+    background: var(--bg-gray); border-radius: 4px; font-size: 14px;
+  }
+  .trilogy-nav .t-title {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .trilogy-nav a {
+    display: block; padding: 6px 0; color: var(--text);
+    text-decoration: none; border-bottom: 1px solid var(--rule);
+  }
+  .trilogy-nav a:last-child { border-bottom: none; }
+  .trilogy-nav a:hover { color: var(--link); }
+  .trilogy-nav a.current { color: var(--text); font-weight: 600; }
+  .trilogy-nav a .t-num {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 12px; color: var(--text-muted); margin-right: 8px;
+  }
+
+  footer {
+    margin-top: 80px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--text-muted); line-height: 1.6;
+  }
+  footer strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-icon">🪞</div>
+<h1 class="page-title">The Proxy Problem</h1>
+
+<div class="page-meta">
+  <div class="field"><span class="field-name">Column</span><span class="field-val"><span class="tag">Second Monitor</span></span></div>
+  <div class="field"><span class="field-name">Series</span><span class="field-val"><span class="tag purple">The Van Dyke Trilogy · 3/3</span></span></div>
+  <div class="field"><span class="field-name">Status</span><span class="field-val"><span class="tag green">Published</span></span></div>
+  <div class="field"><span class="field-name">Tags</span><span class="field-val"><span class="tag">Polymarket</span> <span class="tag">Forensics</span> <span class="tag">Market structure</span></span></div>
+  <div class="field"><span class="field-name">Date</span><span class="field-val">April 24, 2026</span></div>
+  <div class="field"><span class="field-name">Author</span><span class="field-val">@paidinfullintel</span></div>
+</div>
+
+<div class="trilogy-nav">
+  <div class="t-title">The Van Dyke Trilogy</div>
+  <a><span class="t-num">I.</span>The Laundering Ceiling</a>
+  <a><span class="t-num">II.</span>The Six Mistakes</a>
+  <a class="current"><span class="t-num">III.</span>The Proxy Problem</a>
+</div>
+
+<hr class="divider" />
+
+<div class="callout yellow">
+  <div class="callout-icon">⚡</div>
+  <div class="callout-body">
+    <p><strong>TL;DR</strong> — Polymarket's user-wallet architecture creates a structural gap between what an open-source forensic analyst can prove (the trade happened; someone traded on information) and what a prosecutor can prove (a specific person traded on specific information). The gap is bridgeable — but only with Polymarket's cooperation. That's the reason the DOJ has Van Dyke and nobody else. It is also the reason nobody else is guaranteed to be safe.</p>
+  </div>
+</div>
+
+<p>There is an obvious question that hangs over the <em>"They Caught One"</em> analysis: if thirty-six other wallets are visible in the data as having taken the same trade as Van Dyke, why aren't thirty-six other people facing indictments?</p>
+
+<p>The answer is not that the thirty-six wallets are undetectable. The analysis in part one of this trilogy demonstrates that they are — that the accumulation curves, the sizing patterns, the pre-leak timing signatures all exist in public blockchain records that any third party with a SQL editor can query. The wallets are visible. The trades are visible. The profits are visible. What is <em>not</em> visible, to any outside observer, is <strong>who owns the wallets</strong>. And that is what distinguishes a forensic analysis from a federal prosecution.</p>
+
+<p>This piece is about that gap, and about why it exists, and about what the existence of the gap means for the scalability of prediction-market insider-trading enforcement. It is the least dramatic of the three pieces in this series and the most structurally important.</p>
+
+<hr class="divider" />
+
+<h2>🔧 I. How a Polymarket trade actually executes</h2>
+
+<p>When Van Dyke placed a wager on "Maduro out by January 31," the transaction that ultimately hit the Polygon blockchain was not signed directly by a wallet in his name. Polymarket uses a <strong>proxy smart wallet architecture</strong>, which is a standard pattern in consumer-facing crypto applications. The user logs into polymarket.com with an email address, and Polymarket provisions a smart contract wallet on the user's behalf. The user funds this wallet, places orders through the website, and the orders are batched and submitted to the blockchain by a Polymarket-operated relayer.</p>
+
+<p>The consequence is that the address that appears on the blockchain as the maker or taker of a Polymarket trade is <em>the user's proxy contract</em> — not the user's personal Ethereum address, if they have one at all. For a user who has never touched crypto before, the proxy contract is the <em>only</em> address that has ever represented them on-chain.</p>
+
+<div class="layers">
+  <div class="layer public">
+    <div class="l-label">Layer 1 · Public, visible to everyone</div>
+    <div class="l-text">The <strong>proxy smart wallet</strong> · All trades, all prices, all sizes, all timestamps, all counterparties. Full forensic visibility. Can be queried by anyone.</div>
+  </div>
+  <div class="layer public">
+    <div class="l-label">Layer 2 · Public, with tracing effort</div>
+    <div class="l-text">The <strong>funding wallet</strong> · The user's personal EOA that sends USDC to the proxy. Sometimes visible directly; often routed through bridge aggregators or infrastructure contracts that consolidate many users' flows.</div>
+  </div>
+  <div class="layer subpoena">
+    <div class="l-label">Layer 3 · Subpoena-only</div>
+    <div class="l-text">The <strong>Polymarket user record</strong> · email, IP address, VPN exit node, user agent, KYC documents (if any). Private. Requires a court order or voluntary cooperation from Polymarket to access.</div>
+  </div>
+  <div class="layer hidden">
+    <div class="l-label">Layer 4 · Off-chain, indirect</div>
+    <div class="l-text">The <strong>real-world identity</strong> · Legal name, physical address, military rank, employer, NDAs signed, classified information clearance. Requires joining Polymarket's user record to external government, financial, and identity systems.</div>
+  </div>
+</div>
+
+<p>Open-source forensics — the kind anyone can do with a public blockchain indexer — operates exclusively at Layers 1 and 2. A forensic analyst can say: <em>this wallet bought $153,000 of YES shares at an average price of $0.10 in the eighteen hours before the operation.</em> They can say: <em>this wallet was funded by a user EOA that routes capital through a cross-chain bridge.</em> They can say: <em>the user EOA has made only twelve USDC transfers in its entire lifetime, totaling $5.2 million, which is inconsistent with a retail user.</em> What they cannot say is: <em>this wallet belongs to a person named Jane Doe.</em></p>
+
+<p>That last step lives at Layer 3, and Layer 3 is behind Polymarket's user authentication database, and Polymarket's user authentication database is behind a subpoena.</p>
+
+<hr class="divider" />
+
+<h2>🕵️ II. How the DOJ got to Van Dyke</h2>
+
+<p>The indictment is precise about this. Van Dyke connected to Polymarket using a VPN to geolocate outside the US, but he registered the account with an email address in his own name, and his login activity was logged to his actual IP address at various points. Polymarket, which is headquartered in Manhattan and has a demonstrated willingness to cooperate with US prosecutors, matched those login records against the suspicious trading pattern that appeared in the press shortly after the operation.</p>
+
+<blockquote>"When we identified a user trading on classified government information, we referred the matter to the DOJ &amp; cooperated with their investigation." — <em>Polymarket statement, Apr 23, 2026</em></blockquote>
+
+<p>That one sentence is the entire bridge between Layer 1 (public blockchain) and Layer 4 (real-world identity). It is not a technical accomplishment; it is a legal one. Polymarket received a subpoena, responded to it, and provided the records that matched a proxy wallet to a Fort Bragg-stationed Master Sergeant. Every on-chain fact the DOJ uses in the indictment is <em>consistent</em> with Van Dyke's identity, but no on-chain fact alone would have produced it.</p>
+
+<hr class="divider" />
+
+<h2>🧱 III. Why the gap doesn't close for most investigators</h2>
+
+<p>The Van Dyke pathway — proxy wallet identified in the data, subpoena to Polymarket, user record matched to individual — sounds like a scalable process. In practice, it isn't, for three reasons that are worth stating plainly.</p>
+
+<h3>Subpoena power is narrow</h3>
+
+<p>Federal prosecutors can compel Polymarket to produce user records. So can certain state attorneys general and certain regulators (the CFTC, the SEC, FINCEN under specific statutes). Private parties cannot. Journalists cannot. Competing traders cannot. Foreign governments cannot, without a mutual legal assistance treaty and a lot of patience. The set of entities that can turn a Layer 1 forensic finding into a Layer 4 identification is small and its appetite is finite.</p>
+
+<h3>Cooperation is discretionary</h3>
+
+<p>Polymarket is voluntarily cooperating with the DOJ in a high-profile case involving classified information and active-duty military personnel. That cooperation is sensible for Polymarket's business — it creates regulatory goodwill, it forestalls more serious structural interventions, it frames the company as part of the solution rather than part of the problem. It is not guaranteed to extend to cases with lower political profile. Thirty-six additional cases — where the insider advantage might be a drug trial result, an earnings pre-release, a Fed pivot, a corporate announcement — will not produce the same cooperation incentive. Polymarket is not obligated to refer every suspicious pattern, only to comply when compelled.</p>
+
+<h3>The user record may not exist at Layer 4 resolution</h3>
+
+<p>Polymarket requires no US KYC for most accounts. A user who signed up with a burner email, used a VPN throughout, funded the account from a non-KYC source, and never interacted with US-regulated infrastructure produces a Layer 3 record that is mostly IP addresses and user agents. Matching that against a real-world identity requires additional subpoenas — to VPN providers, to email providers, to ISPs — each of which is an additional legal hurdle, each of which can be contested, some of which are impossible (Mullvad does not keep logs).</p>
+
+<p>Van Dyke did almost none of those things, which is why he was findable. The sophisticated cohort did most of them, which is why they will not be.</p>
+
+<hr class="divider" />
+
+<h2>🔗 IV. What the cohort funding data actually shows</h2>
+
+<p>We traced the funding sources of the two largest wallets in the insider cohort — the addresses that deployed $153,390 and $133,113 respectively in the eighteen-hour pre-leak window. Here is a stylized version of what the funding chain looks like for the top wallet:</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Layer</th>
+      <th>Address type</th>
+      <th>What can be said about it</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Polymarket proxy wallet</td>
+      <td>Public; trade history complete; owner anonymous</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>User-scale EOA (funder)</td>
+      <td>Public; 1,418 lifetime transfers, 19 recipients, active since Sep 10, 2025; clearly an <em>operator's</em> wallet, not retail</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Cross-chain bridge aggregator</td>
+      <td>Public address; millions of users; capital originates on another chain and becomes functionally untraceable without cross-chain subpoenas</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Source chain · source of funds</td>
+      <td>Unknown without chain-specific analysis; could be a CEX (KYC'd), a DEX swap (anonymous), another proxy wallet (another layer to peel)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The observable facts are: $2.53 million of the user EOA's lifetime activity routes through <strong>LI.FI</strong>, a cross-chain bridge aggregator. $1.68 million routes through a Polymarket deposit infrastructure address. $461,000 routes to the single proxy wallet we identified as the pre-leak Maduro buyer. $405,000 routes to <em>another</em> Polymarket proxy wallet that only received funds after January 1 — suggesting a second position was opened post-operation. $50,000 routes to a CEX deposit address on April 5.</p>
+
+<div class="callout orange">
+  <div class="callout-icon">🔍</div>
+  <div class="callout-body">
+    <p>At Layer 2, this wallet looks like a <strong>desk running multiple Polymarket accounts with cross-chain capital management</strong>. That's a coherent economic profile. It is also a profile that terminates at Layer 2 for any investigator without subpoena power — the cross-chain bridge is the next hop, and following capital through a bridge aggregator that processes thousands of transactions per hour requires cooperation from the bridge, which requires jurisdiction, which requires specific legal process.</p>
+    <p>The forensic ceiling, for a journalist or an independent analyst, is Layer 2. The prosecutorial ceiling, for a subpoena-armed investigator, is Layer 3. Only a very specific class of investigator — one with subpoena power <em>and</em> cooperation from Polymarket <em>and</em> cooperation from the bridge and the source-chain infrastructure — reaches Layer 4.</p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<h2>🧠 V. What the gap means</h2>
+
+<p>The Proxy Problem is not a flaw in Polymarket's design. Proxy smart wallets are good consumer UX. They abstract away the hardest parts of self-custody, which is exactly what a mainstream prediction market needs. The problem is not that proxies exist; the problem is that they create an asymmetric identity gap between the forensic analyst's view and the prosecutor's view.</p>
+
+<p>The gap has three consequences worth internalizing:</p>
+
+<p><strong>First:</strong> Forensic publications — this one included — can prove, from public data alone, that a pattern of insider trading exists. They cannot, from public data alone, prove <em>who</em> did it. The distinction matters. PIF can write "thirty-six wallets took the same trade as the indicted defendant" without risking a defamation claim because none of those wallets is identified to a person. If one of them were identified, the legal calculus would change immediately.</p>
+
+<p><strong>Second:</strong> Polymarket's cooperation converts a Layer 1/Layer 2 finding into a Layer 3/Layer 4 case, but only in the cases Polymarket chooses to cooperate on. The Van Dyke case was cooperation-by-choice, not cooperation-by-compulsion — the company volunteered the referral. Every future prosecution on Polymarket will require either (a) Polymarket electing to cooperate, or (b) federal prosecutors electing to compel cooperation through subpoena. Both routes are discretionary. Neither is automatic.</p>
+
+<p><strong>Third:</strong> For sophisticated users, the Proxy Problem is a <em>feature</em>. The same architecture that makes Polymarket usable for retail users also provides a natural obfuscation layer for professional operators. The wallet that traded does not share an address history with the wallet that funded it; the funding wallet does not share a cross-chain history with the CEX that cashed out; the cash-out does not trivially tie back to the individual. Each layer requires its own unwinding. Each unwinding requires its own legal process.</p>
+
+<hr class="divider" />
+
+<h2>⚖️ VI. The structural question</h2>
+
+<p>The Van Dyke prosecution does not answer the structural question that sits underneath it. The structural question is whether prediction-market insider trading enforcement will scale — whether the DOJ will build a next case, and a next one after that, until the set of people who know the enforcement is real catches up to the set of people who trade on information. That question is not technical. It is a question about resourcing, about prosecutorial priority, about whether the political will to extend the Commodity Exchange Act's insider-trading perimeter to prediction markets is sustained past the one sexy, high-profile, active-duty-military case.</p>
+
+<p>What the Proxy Problem guarantees is that each case will require the same elaborate pathway Van Dyke's did. A forensic identification of the pattern; a subpoena to Polymarket; a cooperation decision; a match against a real identity; potentially additional subpoenas to bridges, exchanges, VPNs, or ISPs. That's a lot of process per case. The bottleneck is not the forensics, which are cheap and public. The bottleneck is the subpoena power, the cooperation incentive, and the prosecutor's time.</p>
+
+<div class="callout purple">
+  <div class="callout-icon">🧱</div>
+  <div class="callout-body">
+    <p>The thirty-six wallets that took Van Dyke's trade are not going to be prosecuted next week. They may not be prosecuted at all. They may never be identified, because identifying them requires a chain of legal process that no federal prosecutor is likely to walk for cases smaller than Operation Absolute Resolve.</p>
+    <p>This is the actual structure of the Van Dyke outcome, and it is worth stating clearly. The DOJ caught a Master Sergeant because catching a Master Sergeant for trading on a classified military operation was worth the full pathway. What the DOJ has not demonstrated is whether catching the marginal thirty-six will be worth it too.</p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<h2>🧭 VII. The end of the trilogy</h2>
+
+<p>Across three pieces: we have demonstrated that the pre-trade chart is the evidence (<em>The Laundering Ceiling</em>); we have demonstrated what operational naïveté looks like when applied to that architecture (<em>The Six Mistakes</em>); and we have demonstrated why the gap between forensic visibility and prosecutorial identification is the structural reason insider-trading enforcement on prediction markets will remain case-by-case rather than systematic.</p>
+
+<p>The Van Dyke prosecution is a milestone. It establishes that prediction-market insider trading is prosecutable in US federal court. It establishes that Polymarket will cooperate. It establishes that on-chain forensics is admissible. None of that is trivial. But none of it — yet — establishes that the enforcement regime will scale to catch the other traders who are using prediction markets exactly the way Van Dyke did, just with better tradecraft.</p>
+
+<p>Whether the regime scales is now a political and resourcing question, not a technical one. The technology is ready. The data is ready. The next case depends on whether the DOJ cares to walk the pathway a second time.</p>
+
+<p>We'll be watching for the answer — and for every new flat-to-vertical curve that appears on Polymarket between now and then.</p>
+
+<hr class="divider" />
+
+<div class="trilogy-nav">
+  <div class="t-title">The Van Dyke Trilogy · Complete</div>
+  <a><span class="t-num">I.</span>The Laundering Ceiling — why better laundering wouldn't have helped</a>
+  <a><span class="t-num">II.</span>The Six Mistakes — a teardown of Van Dyke's amateur errors</a>
+  <a class="current"><span class="t-num">III.</span>The Proxy Problem — the attribution gap that only subpoenas can bridge</a>
+</div>
+
+<footer>
+  <p>© 2026 paidinfullintel · Part III of the Van Dyke Trilogy</p>
+</footer>
+
+</div>
+</body>
+</html>

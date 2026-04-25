@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Laundering Ceiling — Paid In Full</title>
+<style>
+  :root {
+    --text: rgb(55, 53, 47);
+    --text-light: rgba(55, 53, 47, 0.65);
+    --text-muted: rgba(55, 53, 47, 0.45);
+    --rule: rgba(55, 53, 47, 0.09);
+    --rule-strong: rgba(55, 53, 47, 0.16);
+    --bg: #ffffff;
+    --bg-gray: rgb(247, 246, 243);
+    --bg-blue: rgb(231, 243, 248);
+    --bg-yellow: rgb(251, 243, 219);
+    --bg-red: rgb(251, 228, 228);
+    --bg-green: rgb(221, 237, 234);
+    --bg-orange: rgb(250, 235, 221);
+    --bg-purple: rgb(244, 240, 247);
+    --code-bg: rgba(135, 131, 120, 0.15);
+    --code-text: #eb5757;
+    --link: rgb(35, 131, 226);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 Helvetica, "Apple Color Emoji", Arial, sans-serif,
+                 "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text); background: var(--bg);
+    font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .page { max-width: 900px; margin: 0 auto; padding: 60px 96px 200px; }
+  @media (max-width: 768px) { .page { padding: 40px 24px 120px; } }
+
+  .page-icon { font-size: 78px; line-height: 1; margin-bottom: 16px; user-select: none; }
+  h1.page-title {
+    font-size: 40px; font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.022em; margin-bottom: 8px;
+  }
+  .page-meta {
+    display: flex; flex-wrap: wrap; gap: 12px 28px;
+    margin: 28px 0 8px; padding: 12px 0; font-size: 14px; color: var(--text-light);
+  }
+  .page-meta .field { display: flex; gap: 10px; align-items: center; min-width: 200px; }
+  .page-meta .field-name { color: var(--text-muted); font-size: 13px; min-width: 110px; }
+  .page-meta .field-val { color: var(--text); }
+  .tag {
+    background: var(--bg-gray); padding: 2px 8px; border-radius: 3px;
+    font-size: 12px; color: var(--text);
+  }
+  .tag.green { background: var(--bg-green); }
+  .tag.red { background: var(--bg-red); }
+  .tag.yellow { background: var(--bg-yellow); }
+  .tag.blue { background: var(--bg-blue); }
+  .tag.purple { background: var(--bg-purple); }
+
+  hr.divider { border: none; height: 1px; background: var(--rule); margin: 24px 0; }
+
+  h2 {
+    font-size: 30px; font-weight: 700; line-height: 1.3;
+    margin: 36px 0 4px; letter-spacing: -0.012em;
+  }
+  h3 { font-size: 24px; font-weight: 600; line-height: 1.3; margin: 28px 0 4px; }
+  h4 { font-size: 20px; font-weight: 600; line-height: 1.3; margin: 20px 0 4px; }
+
+  p { margin: 6px 0; padding: 3px 2px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    background: var(--code-bg); color: var(--code-text);
+    padding: 2px 6px; border-radius: 3px; font-size: 0.85em;
+  }
+
+  .callout {
+    display: flex; gap: 12px; padding: 16px 16px 16px 14px;
+    margin: 8px 0; border-radius: 4px; background: var(--bg-gray); align-items: flex-start;
+  }
+  .callout.blue { background: var(--bg-blue); }
+  .callout.yellow { background: var(--bg-yellow); }
+  .callout.red { background: var(--bg-red); }
+  .callout.green { background: var(--bg-green); }
+  .callout.orange { background: var(--bg-orange); }
+  .callout.purple { background: var(--bg-purple); }
+  .callout-icon { font-size: 18px; line-height: 1.5; user-select: none; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.55; }
+  .callout-body p { padding: 0; margin: 0; }
+  .callout-body p + p { margin-top: 8px; }
+
+  blockquote {
+    border-left: 3px solid var(--text); padding: 4px 0 4px 14px;
+    margin: 10px 0; font-size: 18px; line-height: 1.5;
+  }
+  blockquote em { color: var(--text-light); }
+
+  ul, ol { margin: 4px 0; padding-left: 28px; }
+  li { padding: 3px 2px; line-height: 1.55; }
+
+  .table-wrap {
+    margin: 14px 0; overflow-x: auto;
+    border: 1px solid var(--rule-strong); border-radius: 3px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; padding: 10px 14px; background: var(--bg-gray);
+    font-weight: 600; font-size: 12px; color: var(--text-light);
+    border-bottom: 1px solid var(--rule-strong); border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule); vertical-align: top;
+  }
+  td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.wallet {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 13px; color: var(--text);
+  }
+  tr:hover td { background: rgba(55, 53, 47, 0.025); }
+
+  .columns {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin: 16px 0;
+  }
+  @media (max-width: 768px) { .columns { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { padding: 14px; background: var(--bg-gray); border-radius: 4px; }
+  .stat-card .stat-label { font-size: 12px; color: var(--text-light); margin-bottom: 6px; }
+  .stat-card .stat-num { font-size: 24px; font-weight: 700; line-height: 1.1; }
+  .stat-card .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .flow {
+    background: var(--bg-gray); padding: 20px; border-radius: 4px;
+    margin: 16px 0; font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 13px; line-height: 1.8;
+  }
+  .flow .step {
+    display: grid; grid-template-columns: 24px 1fr;
+    gap: 12px; padding: 6px 0;
+  }
+  .flow .step-num {
+    color: var(--text-muted); font-weight: 600;
+  }
+  .flow .step-text { color: var(--text); }
+  .flow .step-text em { color: var(--text-light); font-style: normal; }
+
+  details.toggle { margin: 4px 0; padding: 3px 2px; }
+  details.toggle summary {
+    cursor: pointer; list-style: none; display: flex;
+    align-items: flex-start; gap: 6px; padding: 3px 0; font-weight: 600;
+  }
+  details.toggle summary::-webkit-details-marker { display: none; }
+  details.toggle summary::before {
+    content: "▶"; font-size: 11px; color: var(--text-light);
+    transition: transform 0.15s; margin-top: 6px; flex-shrink: 0;
+  }
+  details.toggle[open] summary::before { transform: rotate(90deg); }
+  .toggle-body { padding-left: 22px; margin-top: 4px; }
+
+  .trilogy-nav {
+    margin: 24px 0;
+    padding: 16px;
+    background: var(--bg-gray);
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .trilogy-nav .t-title {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .trilogy-nav a {
+    display: block; padding: 6px 0;
+    color: var(--text); text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .trilogy-nav a:last-child { border-bottom: none; }
+  .trilogy-nav a:hover { color: var(--link); }
+  .trilogy-nav a.current { color: var(--text); font-weight: 600; }
+  .trilogy-nav a .t-num {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 12px; color: var(--text-muted); margin-right: 8px;
+  }
+
+  footer {
+    margin-top: 80px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--text-muted); line-height: 1.6;
+  }
+  footer strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-icon">🏗️</div>
+<h1 class="page-title">The Laundering Ceiling</h1>
+
+<div class="page-meta">
+  <div class="field"><span class="field-name">Column</span><span class="field-val"><span class="tag">Second Monitor</span></span></div>
+  <div class="field"><span class="field-name">Series</span><span class="field-val"><span class="tag purple">The Van Dyke Trilogy · 1/3</span></span></div>
+  <div class="field"><span class="field-name">Status</span><span class="field-val"><span class="tag green">Published</span></span></div>
+  <div class="field"><span class="field-name">Tags</span><span class="field-val"><span class="tag">Polymarket</span> <span class="tag">Forensics</span> <span class="tag red">Insider trading</span></span></div>
+  <div class="field"><span class="field-name">Date</span><span class="field-val">April 24, 2026</span></div>
+  <div class="field"><span class="field-name">Author</span><span class="field-val">@paidinfullintel</span></div>
+</div>
+
+<div class="trilogy-nav">
+  <div class="t-title">The Van Dyke Trilogy</div>
+  <a class="current"><span class="t-num">I.</span>The Laundering Ceiling</a>
+  <a><span class="t-num">II.</span>The Six Mistakes</a>
+  <a><span class="t-num">III.</span>The Proxy Problem</a>
+</div>
+
+<hr class="divider" />
+
+<div class="callout yellow">
+  <div class="callout-icon">⚡</div>
+  <div class="callout-body">
+    <p><strong>TL;DR</strong> — You can launder the money. You cannot launder the <em>timing</em>. The Van Dyke indictment looks like a story about where the $444,209 went after the trade. It's actually a story about the fifteen hours <em>before</em> the trade, and why those hours can't be hidden — by anyone, ever, regardless of how many mixers, bridges, or proxy wallets sit downstream.</p>
+  </div>
+</div>
+
+<p>The obvious question after an insider trading indictment is always the same: <em>how did they think they'd get away with it?</em> Van Dyke's answer was a mixture of amateur-hour execution and a quiet bet on the transparency of the Polygon blockchain being less transparent than it is. He thought he could move $444,000 through a foreign crypto vault, a cryptocurrency exchange, and a newly opened Interactive Brokers account, and that the layering would be enough. <strong>It wasn't.</strong> As of April 21, 2026, the Interactive Brokers account still contains $415,511 of "proceeds traceable to VAN DYKE's Polymarket trades," according to the indictment unsealed yesterday in the Southern District of New York.</p>
+
+<p>It's tempting to read the indictment as a laundering failure — as a story about what Van Dyke <em>should</em> have done differently to sanitize the money. A better mixer. A cold wallet buried for five years. A handful of proxy accounts scattered across six jurisdictions. <strong>This reading misunderstands the structure of the case.</strong> The laundering was never the weak link. The laundering was only ever going to be as good as the trade that preceded it, and the trade was the evidence.</p>
+
+<p>That's the ceiling. No amount of post-trade obfuscation can unprint the accumulation curve that preceded the trade. And the accumulation curve — for Van Dyke, and for every other Polymarket insider who will ever exist — is public by architectural necessity.</p>
+
+<hr class="divider" />
+
+<h2>🧮 I. The money trail, summarized</h2>
+
+<p>Start with what the indictment actually alleges. Between December 27, 2025 and January 2, 2026, Van Dyke made thirteen trades on Polymarket, moving a total of <strong>$33,934 in USDC.e</strong> into YES positions on Maduro and Venezuela markets. When the operation he helped plan was made public by the President at 4:21 AM EST on January 3, those positions resolved to $1.00 and Van Dyke's account credited <strong>approximately $437,859 in USDC.e</strong>. He withdrew, and the laundering began.</p>
+
+<div class="flow">
+  <div class="step"><div class="step-num">01</div><div class="step-text">Jan 3 · Polymarket → <em>foreign cryptocurrency vault</em> (a lending protocol that advertises yield) · <strong>437,859 USDC.e</strong></div></div>
+  <div class="step"><div class="step-num">02</div><div class="step-text">Jan 16 · Vault → <em>cryptocurrency exchange</em> · <strong>444,209 USDC.e</strong> (includes ~$6,350 in interest accrued)</div></div>
+  <div class="step"><div class="step-num">03</div><div class="step-text">Exchange → <em>newly-created brokerage account</em> at Interactive Brokers · <strong>$444,209</strong></div></div>
+  <div class="step"><div class="step-num">04</div><div class="step-text">Jan 22 · Internal transfer of <strong>$300,000</strong> within the brokerage system (the basis for the unlawful monetary transaction charge)</div></div>
+  <div class="step"><div class="step-num">05</div><div class="step-text">Apr 21 · Current balance in the Interactive Brokers account · <strong>$415,511</strong> · subject to forfeiture</div></div>
+</div>
+
+<p>Read this as a laundering tutorial for a moment. The account at Interactive Brokers is registered in Van Dyke's legal name. The cryptocurrency exchange account had its registered email changed to a burner address that had been pre-registered on December 14, 2025 — two weeks before the first trade. The "foreign crypto vault" is a lending protocol, which functions as a hold-and-yield layer rather than a true mixer. There is no Tornado Cash, no Wasabi-style coinjoin, no cross-chain laundering through Monero, no serialized splitting into small transfers across hundreds of wallets. <strong>The entire laundering architecture is: one hop into a lending protocol, one hop to a KYC exchange, one hop to a US-regulated brokerage.</strong></p>
+
+<p>That is not a laundering scheme. That is parking money and hoping no one looks.</p>
+
+<hr class="divider" />
+
+<h2>🔬 II. Why "better laundering" wouldn't have helped</h2>
+
+<p>The thought experiment: imagine Van Dyke had done everything right on the back end. Imagine he had bridged his $33,934 deposit in through a coinjoin, traded through a daisy-chain of three proxy wallets, converted his $444,000 payout into Monero on a no-KYC exchange, held for six months in a cold wallet, and finally remerged the funds through a legitimate-looking consulting invoice. Would he have gotten away with it?</p>
+
+<p>Probably not. And the reason is the part of the trade that no amount of downstream cleanup can touch: <strong>the pre-trade price curve</strong>.</p>
+
+<p>Polymarket markets publish every trade to a public blockchain the moment it executes. That means the entire life of every market is a public time series: every share changing hands, every price at which it changed hands, every timestamp. When Van Dyke bought 88,187 YES shares of "Maduro out by January 31, 2026" at an average price of $0.08 at approximately 9:58 PM EST on January 2 — six hours and twenty-three minutes before the President's public announcement — that trade entered a price record that now has a shape. A very specific shape. A shape that looks like this:</p>
+
+<div class="callout blue">
+  <div class="callout-icon">📈</div>
+  <div class="callout-body">
+    <p>For <strong>twenty-seven hours</strong>, the YES price on "Maduro out by January 31" sat between $0.05 and $0.07 on hourly volume that rarely exceeded $30,000. Then, starting at 1:00 AM UTC on January 3 — five hours before sunrise, five hours before any wire service had the story — volume in a single hour quintupled to $81,000. By 3:00 AM it was $112,000. By 5:00 AM, $166,000. By 6:00 AM the price had tripled to $0.34 on $340,000 of volume. By 7:00 AM it was $0.59.</p>
+    <p>This shape — <strong>flat-to-vertical</strong>, with volume breaking before price — is the signature of informed buying absorbed by a thin order book. It is the evidence.</p>
+  </div>
+</div>
+
+<p>The DOJ indictment does not need to prove that <em>this specific wallet</em> is Van Dyke in order to prove that <em>an</em> insider was trading. The DOJ only needs to prove that someone with material nonpublic information entered this market in this window, and then prove that Van Dyke was that someone. The first half of that proof is the chart. The second half is the subpoena.</p>
+
+<p>Better laundering — hypothetical, perfectly executed post-trade laundering — doesn't change the first half of the proof. It changes the path the subpoena takes, but the subpoena is coming regardless, because the flat-to-vertical curve is the thing that <em>generates</em> the subpoena. In the Van Dyke case, the subpoena went to Polymarket, which handed over the user record, and the user record matched a Fort Bragg IP address that matched a soldier assigned to Operation Absolute Resolve. In a hypothetical better-laundered case, the subpoena goes somewhere else — maybe to a VPN provider, maybe to an exchange, maybe to a hardware wallet manufacturer. But it goes.</p>
+
+<hr class="divider" />
+
+<h2>🧱 III. The ceiling, stated plainly</h2>
+
+<div class="callout purple">
+  <div class="callout-icon">🏗️</div>
+  <div class="callout-body">
+    <p><strong>The Laundering Ceiling.</strong> The quality of your downstream obfuscation cannot exceed the quality of your pre-trade invisibility. If you were visible when you were accumulating — in size, at a specific price, in a specific window — then nothing you do with the money afterwards can undo that visibility.</p>
+  </div>
+</div>
+
+<p>Every prediction market insider trade has two traces. The first trace is the pre-trade accumulation pattern: what was bought, at what price, at what time, at what size. This trace is public by definition. It lives on the chain whether or not anyone ever identifies the wallet that made the trades. The second trace is the post-trade money flow: where did the winnings go, through what intermediaries, to what final destination. This trace is only sometimes public — it depends on the laundering technique, the jurisdiction, the counterparties, the subpoena power of the investigator.</p>
+
+<p>Laundering operates exclusively on the second trace. A mixer helps with the second trace. A cold wallet helps with the second trace. A foreign exchange helps with the second trace. None of these techniques touches the first trace, because the first trace is already frozen in the blockchain's history before the laundering even begins.</p>
+
+<p>Traditional-market insider trading cases invert this architecture. In an equities case, the pre-trade trace — the order book, the specific trades, the counterparties — is largely opaque to outside observers; the post-trade trace (the profit, the withdrawal, the bank transfer) is where prosecutors begin their investigation. Prediction markets on public blockchains flip this. <strong>The pre-trade trace is the easy part. The post-trade trace is the hard part.</strong> And because laundering techniques are specifically designed to defeat post-trade tracing, sophisticated insiders will correctly conclude that their laundering is strong — and incorrectly conclude that this makes them safe.</p>
+
+<hr class="divider" />
+
+<h2>🔍 IV. What the sophisticated cohort looks like</h2>
+
+<p>The companion piece to this one, <em>"They Caught One. The Tape Shows 36 More,"</em> identified a cohort of thirty-seven wallets that took the same trade as Van Dyke in the eighteen hours before the operation became public. We profiled six of them that had deployed $20,000 or more at entry prices below eighteen cents — wallets that look, in every statistical sense, like they knew what was coming.</p>
+
+<p>We traced the funding source of the two largest. Here's what that looked like for the top wallet, which deployed <strong>$153,390</strong> on January 2-3 into a single pair of Maduro markets:</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Direction</th>
+      <th>Context</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Sep 10, 2025</td><td class="num">$40K</td><td>Funding in</td><td>User EOA begins bridging capital to Polygon</td></tr>
+    <tr><td>Dec 4-5, 2025</td><td class="num">$32K</td><td>Funding in</td><td>Further top-up from same user EOA</td></tr>
+    <tr><td>Dec 28, 2025</td><td class="num">$190K</td><td>Funding in</td><td>Large pre-positioning deposit</td></tr>
+    <tr><td><strong>Jan 3, 2026 · 01:01 UTC</strong></td><td class="num"><strong>$60K</strong></td><td>Funding in</td><td><strong>First "insider hour" deposit · mid-trade top-up</strong></td></tr>
+    <tr><td><strong>Jan 3, 2026 · 03:52 UTC</strong></td><td class="num"><strong>$60K</strong></td><td>Funding in</td><td><strong>Second mid-trade top-up · price still at $0.10</strong></td></tr>
+    <tr><td><strong>Jan 3, 2026 · 04:40 UTC</strong></td><td class="num"><strong>$80K</strong></td><td>Funding in</td><td><strong>Third mid-trade top-up · 90 minutes before leak</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>That funding wallet — a non-Polymarket, non-infrastructure address that has only ever funded twelve counterparties in its entire existence and has moved $5.2 million total — has been active since <strong>September 10, 2025</strong>. It bridges capital in from other chains through a cross-chain router, tops up Polymarket positions, and withdraws profits to centralized exchanges. It's the operational profile of a <em>desk</em>, not a single retail user.</p>
+
+<div class="callout orange">
+  <div class="callout-icon">💡</div>
+  <div class="callout-body">
+    <p>Notice what the laundering here <em>is</em>. The user EOA never touches the Polymarket trading wallet in a way that looks personal. Capital is routed through LI.FI (a cross-chain bridge), through infrastructure addresses, through proxy smart wallets. The actual user identity is at least three hops from the trade.</p>
+    <p>And yet: <strong>the three mid-trade top-ups on the morning of January 3 are in the data forever</strong>. Someone funded fresh capital into this trading wallet at 01:01, 03:52, and 04:40 UTC on January 3, 2026 — during the exact hours when the price was breaking from $0.07 to $0.12 in advance of a 4:21 AM public announcement. That is timing residue. It cannot be laundered. It is the chart.</p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<h2>⚖️ V. What this means for the next case</h2>
+
+<p>Polymarket's CEO is using the Van Dyke indictment as a proof-of-compliance. <em>"Insider trading has no place on Polymarket. Today's arrest is proof the system works."</em> The claim is half-right. The system works in the sense that public blockchain data, plus one subpoena, plus one IP address, was enough to unravel a case. The system doesn't work in the sense that no one has yet unraveled the thirty-six other wallets that took the same trade in the same window.</p>
+
+<p>That second unraveling is possible. It's possible because the pre-trade trace for those thirty-six wallets is already public — it lives in the same blockchain records the DOJ used to walk in the Van Dyke door. What's missing is the subpoena: the specific mechanism by which each anonymous trading wallet gets matched to a real person. That mechanism is available to federal prosecutors through Polymarket's user records, and Polymarket has already demonstrated it will cooperate. The only question is whether the DOJ wants to spend the resources.</p>
+
+<p>This is the real thesis. Not that laundering is hard — it isn't, comparatively. Not that on-chain forensics is omniscient — it isn't, as the proxy-wallet problem we'll cover in part three makes clear. <strong>The thesis is that prediction-market insider trading cases don't depend on catching the laundering. They depend on reading the chart.</strong> And the chart is always there.</p>
+
+<p>Van Dyke's prosecution will proceed whether or not his $415,511 is ever successfully forfeited. The charts don't require the money to be recovered. The charts only require that they ever existed.</p>
+
+<p>Every insider-trading case going forward will begin with someone running the same query we ran: <em>show me every market that went flat-to-vertical, and show me every wallet that accumulated YES in the eighteen hours before the vertical.</em> The list will be short. The list will always be short. And every name on it will have been traceable from the moment the trade executed.</p>
+
+<div class="callout red">
+  <div class="callout-icon">🎯</div>
+  <div class="callout-body">
+    <p><strong>The laundering ceiling is the chart.</strong> Nothing you do after the trade changes what the chart says about the trade. And the chart is not encrypted. The chart is not obfuscated. The chart is not behind a subpoena. The chart is a public record, keyed to a timestamp, available to every prosecutor in every jurisdiction, in perpetuity.</p>
+    <p>The people who understand this will trade Polymarket one way. The people who don't will trade it like Van Dyke.</p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="trilogy-nav">
+  <div class="t-title">Continue reading</div>
+  <a><span class="t-num">II.</span>The Six Mistakes — a teardown of Van Dyke's amateur errors</a>
+  <a><span class="t-num">III.</span>The Proxy Problem — the attribution gap that only subpoenas can bridge</a>
+</div>
+
+<footer>
+  <p>© 2026 paidinfullintel · Part I of the Van Dyke Trilogy</p>
+</footer>
+
+</div>
+</body>
+</html>

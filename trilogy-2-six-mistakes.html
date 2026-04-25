@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Six Mistakes — Paid In Full</title>
+<style>
+  :root {
+    --text: rgb(55, 53, 47);
+    --text-light: rgba(55, 53, 47, 0.65);
+    --text-muted: rgba(55, 53, 47, 0.45);
+    --rule: rgba(55, 53, 47, 0.09);
+    --rule-strong: rgba(55, 53, 47, 0.16);
+    --bg: #ffffff;
+    --bg-gray: rgb(247, 246, 243);
+    --bg-blue: rgb(231, 243, 248);
+    --bg-yellow: rgb(251, 243, 219);
+    --bg-red: rgb(251, 228, 228);
+    --bg-green: rgb(221, 237, 234);
+    --bg-orange: rgb(250, 235, 221);
+    --bg-purple: rgb(244, 240, 247);
+    --code-bg: rgba(135, 131, 120, 0.15);
+    --code-text: #eb5757;
+    --link: rgb(35, 131, 226);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 Helvetica, "Apple Color Emoji", Arial, sans-serif,
+                 "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text); background: var(--bg);
+    font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  .page { max-width: 900px; margin: 0 auto; padding: 60px 96px 200px; }
+  @media (max-width: 768px) { .page { padding: 40px 24px 120px; } }
+
+  .page-icon { font-size: 78px; line-height: 1; margin-bottom: 16px; user-select: none; }
+  h1.page-title {
+    font-size: 40px; font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.022em; margin-bottom: 8px;
+  }
+  .page-meta {
+    display: flex; flex-wrap: wrap; gap: 12px 28px;
+    margin: 28px 0 8px; padding: 12px 0; font-size: 14px; color: var(--text-light);
+  }
+  .page-meta .field { display: flex; gap: 10px; align-items: center; min-width: 200px; }
+  .page-meta .field-name { color: var(--text-muted); font-size: 13px; min-width: 110px; }
+  .page-meta .field-val { color: var(--text); }
+  .tag { background: var(--bg-gray); padding: 2px 8px; border-radius: 3px; font-size: 12px; color: var(--text); }
+  .tag.green { background: var(--bg-green); }
+  .tag.red { background: var(--bg-red); }
+  .tag.yellow { background: var(--bg-yellow); }
+  .tag.purple { background: var(--bg-purple); }
+
+  hr.divider { border: none; height: 1px; background: var(--rule); margin: 24px 0; }
+
+  h2 { font-size: 30px; font-weight: 700; line-height: 1.3; margin: 36px 0 4px; letter-spacing: -0.012em; }
+  h3 { font-size: 24px; font-weight: 600; line-height: 1.3; margin: 28px 0 4px; }
+
+  p { margin: 6px 0; padding: 3px 2px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    background: var(--code-bg); color: var(--code-text);
+    padding: 2px 6px; border-radius: 3px; font-size: 0.85em;
+  }
+
+  .callout {
+    display: flex; gap: 12px; padding: 16px 16px 16px 14px;
+    margin: 8px 0; border-radius: 4px; background: var(--bg-gray); align-items: flex-start;
+  }
+  .callout.blue { background: var(--bg-blue); }
+  .callout.yellow { background: var(--bg-yellow); }
+  .callout.red { background: var(--bg-red); }
+  .callout.green { background: var(--bg-green); }
+  .callout.orange { background: var(--bg-orange); }
+  .callout.purple { background: var(--bg-purple); }
+  .callout-icon { font-size: 18px; line-height: 1.5; user-select: none; flex-shrink: 0; }
+  .callout-body { flex: 1; line-height: 1.55; }
+  .callout-body p { padding: 0; margin: 0; }
+  .callout-body p + p { margin-top: 8px; }
+
+  blockquote {
+    border-left: 3px solid var(--text); padding: 4px 0 4px 14px;
+    margin: 10px 0; font-size: 18px; line-height: 1.5;
+  }
+
+  ul, ol { margin: 4px 0; padding-left: 28px; }
+  li { padding: 3px 2px; line-height: 1.55; }
+
+  /* MISTAKE CARD */
+  .mistake {
+    margin: 24px 0;
+    padding: 20px 24px;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    border-left: 4px solid var(--bg-red);
+    border-radius: 4px;
+  }
+  .mistake-header {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .mistake-num {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 14px; font-weight: 600; color: var(--text-muted);
+  }
+  .mistake-title {
+    font-size: 22px; font-weight: 700; line-height: 1.2;
+    color: var(--text);
+  }
+  .mistake-severity {
+    margin-left: auto; font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .mistake-body p { padding: 0; }
+  .mistake-body p + p { margin-top: 10px; }
+  .mistake-contrast {
+    margin-top: 14px; padding: 12px 14px;
+    background: var(--bg-gray); border-radius: 3px;
+    font-size: 14px;
+  }
+  .mistake-contrast .c-label {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 4px;
+    display: block;
+  }
+
+  .table-wrap { margin: 14px 0; overflow-x: auto; border: 1px solid var(--rule-strong); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; padding: 10px 14px; background: var(--bg-gray);
+    font-weight: 600; font-size: 12px; color: var(--text-light);
+    border-bottom: 1px solid var(--rule-strong); border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule); vertical-align: top;
+  }
+  td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:hover td { background: rgba(55, 53, 47, 0.025); }
+
+  .trilogy-nav {
+    margin: 24px 0; padding: 16px;
+    background: var(--bg-gray); border-radius: 4px; font-size: 14px;
+  }
+  .trilogy-nav .t-title {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .trilogy-nav a {
+    display: block; padding: 6px 0; color: var(--text);
+    text-decoration: none; border-bottom: 1px solid var(--rule);
+  }
+  .trilogy-nav a:last-child { border-bottom: none; }
+  .trilogy-nav a:hover { color: var(--link); }
+  .trilogy-nav a.current { color: var(--text); font-weight: 600; }
+  .trilogy-nav a .t-num {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 12px; color: var(--text-muted); margin-right: 8px;
+  }
+
+  footer {
+    margin-top: 80px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--text-muted); line-height: 1.6;
+  }
+  footer strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-icon">🎭</div>
+<h1 class="page-title">The Six Mistakes</h1>
+
+<div class="page-meta">
+  <div class="field"><span class="field-name">Column</span><span class="field-val"><span class="tag">Second Monitor</span></span></div>
+  <div class="field"><span class="field-name">Series</span><span class="field-val"><span class="tag purple">The Van Dyke Trilogy · 2/3</span></span></div>
+  <div class="field"><span class="field-name">Status</span><span class="field-val"><span class="tag green">Published</span></span></div>
+  <div class="field"><span class="field-name">Tags</span><span class="field-val"><span class="tag">Polymarket</span> <span class="tag">Forensics</span> <span class="tag red">Insider trading</span></span></div>
+  <div class="field"><span class="field-name">Date</span><span class="field-val">April 24, 2026</span></div>
+  <div class="field"><span class="field-name">Author</span><span class="field-val">@paidinfullintel</span></div>
+</div>
+
+<div class="trilogy-nav">
+  <div class="t-title">The Van Dyke Trilogy</div>
+  <a><span class="t-num">I.</span>The Laundering Ceiling</a>
+  <a class="current"><span class="t-num">II.</span>The Six Mistakes</a>
+  <a><span class="t-num">III.</span>The Proxy Problem</a>
+</div>
+
+<hr class="divider" />
+
+<div class="callout yellow">
+  <div class="callout-icon">⚡</div>
+  <div class="callout-body">
+    <p><strong>TL;DR</strong> — Master Sergeant Gannon Ken Van Dyke did not get caught because he traded on classified information. He got caught because he was a spectacularly unsophisticated trader. Six discrete operational errors, each sufficient on its own, compounded into a federal indictment. This is a teardown — paired at each step with what the rest of the insider cohort apparently <em>did not</em> do.</p>
+  </div>
+</div>
+
+<p>There is a certain class of insider-trading case where the crime is subtle and the perpetrator is sophisticated and the prosecution has to piece together the pattern from fragmentary evidence. This is not that case. The federal indictment unsealed yesterday against Master Sergeant Gannon Ken Van Dyke reads, in its operational specifics, as a teardown of what happens when a person with zero on-chain experience attempts to execute a crime on a public blockchain.</p>
+
+<p>The charges are serious — five counts, a maximum sentence of up to 60 years in total exposure. But the <em>execution</em> of the crime, as laid out by the Southern District, is a masterclass in what not to do. Every decision point Van Dyke faced, he picked the option that generated the most durable evidence. He did this while apparently believing he was being careful. He used a VPN. He used a pseudonymous Polymarket username. He moved money through a "foreign cryptocurrency vault." He deleted his Polymarket account. None of it helped.</p>
+
+<p>What follows is a six-mistake teardown, ranked roughly by the order in which Van Dyke made them. Each one is paired with what the sophisticated cohort — the <a>thirty-six other wallets we identified</a> trading the same thesis in the same window — appears to have done instead.</p>
+
+<hr class="divider" />
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 01</span>
+    <span class="mistake-title">Using a Polymarket account tied to his personal email</span>
+    <span class="mistake-severity">Critical</span>
+  </div>
+  <div class="mistake-body">
+    <p>On December 26, 2025, Van Dyke created a Polymarket account. He connected to the site using a VPN to geolocate outside the US — Polymarket blocks US retail users — but he registered the account with a personal email address that was in his own name. Two weeks later, on January 6, 2026, he attempted to delete the account, claiming falsely that he had lost access to the email. Polymarket retained the account records anyway. The email was one of the first things the DOJ matched against his identity.</p>
+    <p>The VPN is a forensic decoration. It defeats geofencing, which is a commercial control. It does not defeat email-based identity verification, which is a subpoena target. Van Dyke appears to have confused the two.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">What the cohort did instead</span>
+    The sophisticated cohort routes Polymarket deposits through proxy smart wallets two or three hops from the user's personal identity. The account-to-funder link, where visible, typically involves a cross-chain bridge aggregator — meaning the capital <em>arrives</em> on Polygon from another chain without an easy trail back to a KYC exchange deposit.
+  </div>
+</div>
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 02</span>
+    <span class="mistake-title">Concentrating the entire position in one fresh wallet</span>
+    <span class="mistake-severity">Critical</span>
+  </div>
+  <div class="mistake-body">
+    <p>Van Dyke made all thirteen of his bets from a single Polymarket account created six days before his first trade. The account had no prior trading history in any market. It had never placed a bet on a sports game, an election, a Fed meeting, a pop-culture event, or anything else. Its first trade was $96 on "US Forces in Venezuela by January 31." Its last trade was ninety minutes later — metaphorically — for a total of $33,934 across the Venezuela cluster.</p>
+    <p>The prosecution needs exactly two data points to establish that this account is trading on classified information: its total absence of prior activity, and the identity of the human it belongs to. Concentrating the trade in a single fresh account gave them the first data point without having to ask.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">What the cohort did instead</span>
+    Of the thirty-seven wallets in the insider cohort, twenty-eight had been active on Polymarket for more than sixty days prior to their Maduro trades. They trade other markets — sports, politics, pop culture — and their Maduro positions look, in a high-noise population of retail and speculator flow, like one more market they happened to have a view on. Concentration signal is diluted by activity variance.
+  </div>
+</div>
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 03</span>
+    <span class="mistake-title">Trading in the exact hours before the operation</span>
+    <span class="mistake-severity">Unforced</span>
+  </div>
+  <div class="mistake-body">
+    <p>Van Dyke's final trade was on or about 9:58 PM EST on January 2, 2026 — six hours and twenty-three minutes before the President's 4:21 AM EST public announcement. The shape of his buying window — Dec 27 ($96), Dec 30 ($1,323), Jan 1 ($6,100), Jan 2 AM ($6,150), Jan 2 PM ($6,000 → $7,050 → $7,215) — is almost algorithmically consistent with information becoming progressively more certain over a six-day horizon. Retail buying behavior on Polymarket does not look like this. It looks bursty, random, small. Van Dyke's trades look like the opposite.</p>
+    <p>There is no world in which a prosecutor misses this pattern. The trade-time histogram alone is sufficient for a circumstantial case.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">What the cohort did instead</span>
+    The larger wallets in the cohort front-loaded accumulation into the window but continued to add smaller positions throughout Jan 3 <em>after</em> the announcement — a "hide the early buys in the retail rush" pattern that obscures the shape of the original entry. The chart still shows the accumulation, but the counterfactual — what this trader <em>would</em> have done with no information — becomes harder to construct.
+  </div>
+</div>
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 04</span>
+    <span class="mistake-title">Taking the photograph. Uploading it to Google.</span>
+    <span class="mistake-severity">Catastrophic</span>
+  </div>
+  <div class="mistake-body">
+    <p>At approximately 5:45 AM EST on January 3, 2026 — one hour and twenty-four minutes after the President's public announcement, and three hours and forty-seven minutes after Van Dyke's final Polymarket trade — a photograph was taken of Van Dyke on the deck of the USS Iwo Jima. He is wearing US military fatigues, carrying a rifle, standing alongside three other individuals in fatigues. The photograph was uploaded to Van Dyke's <em>personal Google account</em>.</p>
+    <p>The photograph is not merely evidence; it is a signed receipt. It connects Van Dyke personally to the operation, dates his presence on the recovery vessel, and ties his Google account to his identity — the same Google account that, presumably, was used for the email address that registered the Polymarket account. It is difficult to imagine a piece of evidence more perfectly calibrated to the indictment.</p>
+    <p>The indictment mentions this upload by its exact timestamp. It is cited in paragraph 14.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">What this looks like compared to other whistle-blower or leak cases</span>
+    No sophisticated operator uploads personally identifying material — especially operationally sensitive material — to a cloud service tied to their civilian identity. The photograph is a kind of obverse smoking gun: it exists not because Van Dyke was reckless about the trade, but because he was reckless about the memory.
+  </div>
+</div>
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 05</span>
+    <span class="mistake-title">Laundering in a straight line</span>
+    <span class="mistake-severity">Critical</span>
+  </div>
+  <div class="mistake-body">
+    <p>After his winnings credited to the Polymarket account on January 3, Van Dyke moved approximately $437,859 to a "foreign cryptocurrency vault" — a lending protocol that advertises interest-generating yield. Thirteen days later, on January 16, he withdrew $444,209 (the original plus ~$6,350 in interest) and sent it to a cryptocurrency exchange account. From the exchange account, he withdrew the entire balance to a newly-created brokerage account at Interactive Brokers. On January 22, he executed a $300,000 internal transfer within the brokerage.</p>
+    <p>As of April 21, 2026, <strong>$415,511 of those proceeds sits in an Interactive Brokers account registered in the name "Gannon K Van Dyke."</strong> The laundering consists, essentially, of three hops and one identity change. No mixing, no coinjoin, no cross-chain laundering, no privacy coin conversion, no time delay beyond the thirteen days of vault yield. The money sat in his name the entire time.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">What the cohort did instead</span>
+    The larger cohort wallets appear to route winnings back through cross-chain bridges (LI.FI and similar aggregators) before reaching any identified cash-out path. Some of the flow passes through infrastructure addresses that consolidate millions of users, adding plausible-deniability noise. The point isn't that the cohort is "uncatchable" — it's that each additional hop is an additional subpoena, which is an additional resourcing cost for the prosecutor.
+  </div>
+</div>
+
+<div class="mistake">
+  <div class="mistake-header">
+    <span class="mistake-num">Mistake 06</span>
+    <span class="mistake-title">Pre-registering a burner email two weeks before the trade</span>
+    <span class="mistake-severity">Consciousness-of-guilt</span>
+  </div>
+  <div class="mistake-body">
+    <p>The indictment notes that on or about December 14, 2025 — twelve days before opening the Polymarket account, and twenty days before the operation — Van Dyke created a new email address that was not subscribed to in his own name. On January 6, 2026 — three days after the operation, hours after reports of unusual Polymarket activity began appearing in the press — Van Dyke changed the email registered to his cryptocurrency exchange account to this previously-created burner address.</p>
+    <p>This is the strongest consciousness-of-guilt evidence in the indictment. It is not a trading error; it is not a laundering error. It is a <em>timing</em> error. The burner email was prepared in advance of the trade, which means Van Dyke understood at the time of account creation that his activity might later need to be concealed. The pre-meditation cannot be explained by accident.</p>
+  </div>
+  <div class="mistake-contrast">
+    <span class="c-label">How this reads to the jury</span>
+    A defendant who sets up an anonymity layer two weeks before committing a crime has a significantly harder time arguing that the crime was unintentional. Prosecutors will close on this detail. It functions, in effect, as the defendant's own diary entry about what was coming.
+  </div>
+</div>
+
+<hr class="divider" />
+
+<h2>🧾 What the six mistakes tell us</h2>
+
+<p>None of these mistakes was the result of a sophisticated operational plan going wrong. They are the result of no operational plan at all. Van Dyke acted on what appears to have been a basic, retail-trader mental model of prediction markets: he assumed a VPN would anonymize him, he assumed an out-of-name email would distance him, he assumed a "foreign cryptocurrency vault" would obscure his money. Each of these assumptions was incorrect on the merits, but more importantly, all of them were <em>downstream</em> assumptions — they would only have helped Van Dyke <em>if</em> the chart had not given him away first.</p>
+
+<p>This is the point that connects this piece to the laundering-ceiling argument in part one. Van Dyke's mistakes were operationally bad, but they weren't the mistakes that got him caught. The mistake that got him caught was the one that's present in <em>every</em> insider trade on Polymarket, sophisticated or not: the accumulation curve. The six mistakes only determined <em>how</em> the prosecution would reach him, not <em>whether</em>.</p>
+
+<div class="callout purple">
+  <div class="callout-icon">🧠</div>
+  <div class="callout-body">
+    <p>A useful exercise for PIF readers: read the cohort profile in <em>"They Caught One"</em>, then read this teardown. Notice that every failure mode Van Dyke exhibits is <em>observable in the chart</em>. You don't need Polymarket's subpoenaed user records to know he was trading on information. You just need to see the shape of his entries, the distribution of his size, and the timing of his last trade.</p>
+    <p>That's the methodology. That's what prosecutors will be running on every binary prediction market going forward.</p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="trilogy-nav">
+  <div class="t-title">Continue the trilogy</div>
+  <a><span class="t-num">I.</span>The Laundering Ceiling — why better laundering wouldn't have helped</a>
+  <a><span class="t-num">III.</span>The Proxy Problem — the attribution gap that only subpoenas can bridge</a>
+</div>
+
+<footer>
+  <p>© 2026 paidinfullintel · Part II of the Van Dyke Trilogy</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>They Caught One. The Tape Shows 36 More.</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --text: rgb(55, 53, 47);
+    --text-light: rgba(55, 53, 47, 0.65);
+    --text-muted: rgba(55, 53, 47, 0.45);
+    --rule: rgba(55, 53, 47, 0.09);
+    --rule-strong: rgba(55, 53, 47, 0.16);
+    --bg: #ffffff;
+    --bg-gray: rgb(247, 246, 243);
+    --bg-blue: rgb(231, 243, 248);
+    --bg-yellow: rgb(251, 243, 219);
+    --bg-red: rgb(251, 228, 228);
+    --bg-green: rgb(221, 237, 234);
+    --bg-orange: rgb(250, 235, 221);
+    --code-bg: rgba(135, 131, 120, 0.15);
+    --code-text: #eb5757;
+    --link: rgb(35, 131, 226);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 Helvetica, "Apple Color Emoji", Arial, sans-serif,
+                 "Segoe UI Emoji", "Segoe UI Symbol";
+    color: var(--text);
+    background: var(--bg);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 96px 200px;
+  }
+  @media (max-width: 768px) {
+    .page { padding: 40px 24px 120px; }
+  }
+
+  /* COVER ICON & TITLE ------------------------------------ */
+  .page-icon {
+    font-size: 78px;
+    line-height: 1;
+    margin-bottom: 16px;
+    user-select: none;
+  }
+
+  h1.page-title {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .page-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    margin: 28px 0 8px;
+    padding: 12px 0;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .page-meta .field {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-width: 200px;
+  }
+  .page-meta .field-name {
+    color: var(--text-muted);
+    font-size: 13px;
+    min-width: 110px;
+  }
+  .page-meta .field-val { color: var(--text); }
+  .tag {
+    background: var(--bg-gray);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .tag.green { background: var(--bg-green); }
+  .tag.red { background: var(--bg-red); }
+  .tag.yellow { background: var(--bg-yellow); }
+
+  hr.divider {
+    border: none;
+    height: 1px;
+    background: var(--rule);
+    margin: 24px 0;
+  }
+
+  /* HEADINGS ---------------------------------------------- */
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 36px 0 4px;
+    letter-spacing: -0.012em;
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 28px 0 4px;
+  }
+  h4 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 20px 0 4px;
+  }
+
+  /* PARAGRAPHS -------------------------------------------- */
+  p { margin: 6px 0; padding: 3px 2px; }
+  p + p { margin-top: 2px; }
+
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  code {
+    font-family: "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+
+  /* CALLOUTS ---------------------------------------------- */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 16px 16px 14px;
+    margin: 8px 0;
+    border-radius: 4px;
+    background: var(--bg-gray);
+    align-items: flex-start;
+  }
+  .callout.blue { background: var(--bg-blue); }
+  .callout.yellow { background: var(--bg-yellow); }
+  .callout.red { background: var(--bg-red); }
+  .callout.green { background: var(--bg-green); }
+  .callout.orange { background: var(--bg-orange); }
+  .callout-icon {
+    font-size: 18px;
+    line-height: 1.5;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .callout-body { flex: 1; line-height: 1.55; }
+  .callout-body p { padding: 0; margin: 0; }
+  .callout-body p + p { margin-top: 8px; }
+
+  /* QUOTE ------------------------------------------------- */
+  blockquote {
+    border-left: 3px solid var(--text);
+    padding: 4px 0 4px 14px;
+    margin: 10px 0;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  blockquote em { color: var(--text-light); }
+
+  /* LISTS ------------------------------------------------- */
+  ul, ol { margin: 4px 0; padding-left: 28px; }
+  li { padding: 3px 2px; line-height: 1.55; }
+
+  /* TOGGLE ------------------------------------------------ */
+  details.toggle {
+    margin: 4px 0;
+    padding: 3px 2px;
+  }
+  details.toggle summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 3px 0;
+    font-weight: 600;
+  }
+  details.toggle summary::-webkit-details-marker { display: none; }
+  details.toggle summary::before {
+    content: "▶";
+    font-size: 11px;
+    color: var(--text-light);
+    transition: transform 0.15s;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  details.toggle[open] summary::before { transform: rotate(90deg); }
+  .toggle-body {
+    padding-left: 22px;
+    margin-top: 4px;
+  }
+  .toggle-body p { padding-left: 0; }
+
+  /* TABLES ------------------------------------------------ */
+  .table-wrap {
+    margin: 14px 0;
+    overflow-x: auto;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-gray);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--rule-strong);
+    border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  th:last-child { border-right: none; }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.wallet {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 13px;
+    color: var(--text);
+  }
+  tr:hover td { background: rgba(55, 53, 47, 0.025); }
+  .total-row td {
+    background: rgba(55, 53, 47, 0.04);
+    font-weight: 600;
+  }
+
+  /* CHART ------------------------------------------------- */
+  .chart-block {
+    margin: 24px 0;
+    padding: 24px;
+    background: var(--bg-gray);
+    border-radius: 4px;
+  }
+  .chart-block .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .chart-block .chart-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+  .chart-canvas-wrap {
+    background: var(--bg);
+    padding: 16px;
+    border-radius: 3px;
+    height: 340px;
+    position: relative;
+  }
+  .chart-source {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* COLUMNS ----------------------------------------------- */
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  @media (max-width: 768px) {
+    .columns { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card {
+    padding: 14px;
+    background: var(--bg-gray);
+    border-radius: 4px;
+  }
+  .stat-card .stat-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-num {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .stat-card .stat-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* TIMELINE ---------------------------------------------- */
+  .timeline {
+    margin: 16px 0;
+  }
+  .tl-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-time {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 12px;
+    color: var(--text-light);
+    padding-top: 2px;
+  }
+  .tl-event strong { display: block; margin-bottom: 2px; font-size: 15px; }
+  .tl-event span { font-size: 14px; color: var(--text-light); }
+
+  /* FOOTER ------------------------------------------------ */
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  footer strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-icon">🎯</div>
+<h1 class="page-title">They Caught One. The Tape Shows 36 More.</h1>
+
+<div class="page-meta">
+  <div class="field">
+    <span class="field-name">Column</span>
+    <span class="field-val"><span class="tag">Second Monitor</span></span>
+  </div>
+  <div class="field">
+    <span class="field-name">Status</span>
+    <span class="field-val"><span class="tag green">Published</span></span>
+  </div>
+  <div class="field">
+    <span class="field-name">Tags</span>
+    <span class="field-val"><span class="tag">Polymarket</span> <span class="tag">Forensics</span> <span class="tag red">Insider trading</span></span>
+  </div>
+  <div class="field">
+    <span class="field-name">Date</span>
+    <span class="field-val">April 24, 2026</span>
+  </div>
+  <div class="field">
+    <span class="field-name">Author</span>
+    <span class="field-val">@paidinfullintel</span>
+  </div>
+  <div class="field">
+    <span class="field-name">Data through</span>
+    <span class="field-val">Jan 5, 2026 (settlement)</span>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="callout yellow">
+  <div class="callout-icon">⚡</div>
+  <div class="callout-body">
+    <p><strong>TL;DR</strong> — The DOJ indicted a U.S. Army Master Sergeant yesterday for insider trading on Polymarket. He made $409K betting on the Maduro raid he helped execute. The on-chain record shows <strong>36 other wallets</strong> took the same trade in the same 18-hour pre-leak window. None of them have been named.</p>
+  </div>
+</div>
+
+<p>Master Sergeant Gannon Ken Van Dyke is the first person ever charged in federal court for insider trading on a prediction market. The indictment, unsealed yesterday in the Southern District of New York, alleges that the U.S. Army special forces operator wagered roughly <strong>$33,034</strong> on Polymarket between late December and the early hours of January 3 — the morning of the operation he helped plan and execute, the operation that pulled Nicolás Maduro out of the presidential palace in Caracas. Van Dyke walked away with more than <strong>$409,000</strong>.</p>
+
+<p>Polymarket's chief legal officer posted on X within hours of the arrest:</p>
+
+<blockquote>It's not anonymous — <em>you will be found just like this guy.</em></blockquote>
+
+<p>Polymarket is right that the trail is public. They're wrong about everything else.</p>
+
+<p>The same on-chain transparency that produced the Van Dyke case produces something the Southern District has not yet shown an interest in: a list of <strong>36 other addresses</strong> that took the identical trade, in the identical window, on the identical thesis. Most of them are not Van Dyke. Some of them deployed more capital than he did. None of them have been named in any indictment. They sit in the data as a structural reminder of what the Van Dyke case actually proves: not that the system worked, but that the system showed its work, and the work isn't finished.</p>
+
+<hr class="divider" />
+
+<h2>📈 I. The shape of a leak</h2>
+
+<p>The market in question — <strong>"Maduro out by January 31, 2026?"</strong> — settled YES on January 5. By then it had cycled through every regime of behavior a price can have. For all of December and through the first hours of January 2 it traded as a half-dead long-shot, between 5¢ and 7¢, on tiny volume — the kind of contract that exists for completeness rather than for liquidity. By the morning of January 3 it printed at $0.999. The whole life cycle of the trade — from indifference to certainty — happened inside a window of roughly <strong>18 hours</strong>.</p>
+
+<p>That window is what this piece is about. We pulled every order on every Maduro- and Venezuela-tagged Polymarket market between noon UTC on January 2 and 6:00 AM UTC on January 3. The cutoff matters: by 6 AM the price had already moved from 12¢ to 34¢, and by 7 AM it was at 59¢. <strong>Anything bought after 6 AM is a news trade. Anything bought before 6 AM is something else.</strong></p>
+
+<div class="chart-block">
+  <div class="chart-title">📊 The price didn't move. Then it moved.</div>
+  <div class="chart-sub">"Maduro out by Jan 31, 2026?" — hourly volume-weighted YES price, Jan 2 00:00 UTC through Jan 3 12:00 UTC</div>
+  <div class="chart-canvas-wrap"><canvas id="leakChart"></canvas></div>
+  <div class="chart-source">Source: On-chain Polymarket order data · Condition ID <code>0x580adc...f993</code></div>
+</div>
+
+<p>What you are looking at is a regime change. For 27 hours the price oscillates between 5¢ and 7¢ on volume that never crosses $30K an hour. Then, starting at 1:00 AM UTC on January 3 — <strong>five hours before the public would learn anything</strong> — volume in a single hour quintuples to $81K. By 2 AM it is $162K. By 5 AM it is $166K and the price has crawled to 12¢. By 6 AM the price has tripled to 34¢ on $340K of volume. By 7 AM it is at 59¢ and the day's news cycle has caught up with whatever was already in the order book.</p>
+
+<p>The Van Dyke trade lives in those first five hours. So do the trades of 36 other wallets.</p>
+
+<hr class="divider" />
+
+<h2>🔍 II. The cohort</h2>
+
+<p>We filtered the 18-hour window down to wallets that put at least <strong>$5K</strong> to work at an average entry price <strong>above 4¢</strong> — a deliberately conservative cut, designed to exclude market-maker dust trades and bottom-fishers who quoted residual sub-cent shares for the inventory rebate. What's left is a population of <strong>37 wallets</strong> with directionally meaningful positions.</p>
+
+<div class="columns">
+  <div class="stat-card">
+    <div class="stat-label">Wallets</div>
+    <div class="stat-num">37</div>
+    <div class="stat-sub">in the cohort</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Capital deployed</div>
+    <div class="stat-num">$832K</div>
+    <div class="stat-sub">in 18 hours</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Implied profit</div>
+    <div class="stat-num">$254K</div>
+    <div class="stat-sub">at resolution</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Indicted</div>
+    <div class="stat-num">1</div>
+    <div class="stat-sub">so far</div>
+  </div>
+</div>
+
+<h3>Cohort breakdown by wallet age</h3>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Wallet age</th>
+      <th class="num">Wallets</th>
+      <th class="num">$ Deployed</th>
+      <th class="num">Implied profit</th>
+      <th class="num">Avg entry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Existing (&gt; 60 days)</td><td class="num">28</td><td class="num">$698,600</td><td class="num">$226,812</td><td class="num">$0.117</td></tr>
+    <tr><td>Newish (15–60 days)</td><td class="num">7</td><td class="num">$69,324</td><td class="num">$16,757</td><td class="num">$0.118</td></tr>
+    <tr><td>🚩 Fresh (≤ 14 days)</td><td class="num">2</td><td class="num">$64,269</td><td class="num">$10,702</td><td class="num">$0.077</td></tr>
+    <tr class="total-row"><td>Total</td><td class="num">37</td><td class="num">$832,193</td><td class="num">$254,271</td><td class="num">—</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout orange">
+  <div class="callout-icon">💡</div>
+  <div class="callout-body">
+    <p>The most important row is the bottom one. The cohort that took the same trade as Van Dyke was <strong>overwhelmingly composed of existing wallets</strong> — accounts with weeks or months of prior Polymarket history, blending in with the broader speculator class. Van Dyke's profile, the freshly opened December account, is the one journalists and prosecutors have a vocabulary for. The harder profile to spot is the one that doesn't look fresh because it's been quietly trading other markets for a year, just waiting for the right setup.</p>
+  </div>
+</div>
+
+<h3>The largest pre-leak buyers</h3>
+<p style="color: var(--text-light); font-size: 14px;">Existing wallets · sub-$0.18 entry · sized like they knew</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Wallet</th>
+      <th class="num">$ In</th>
+      <th class="num">Avg entry</th>
+      <th class="num">Markets</th>
+      <th class="num">First seen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="wallet">0xce71bed9…e8683bc</td><td class="num"><strong>$153,390</strong></td><td class="num">$0.099</td><td class="num">2</td><td class="num">Sep 10, 2025</td></tr>
+    <tr><td class="wallet">0x75682c3f…c7adc4b</td><td class="num"><strong>$133,113</strong></td><td class="num">$0.080</td><td class="num">1</td><td class="num">Oct 02, 2025</td></tr>
+    <tr><td class="wallet">0x2615e0c5…ede2c16d</td><td class="num">$38,504</td><td class="num">$0.128</td><td class="num">4</td><td class="num">Jun 04, 2025</td></tr>
+    <tr><td class="wallet">0x17ce7c9a…51f5beec</td><td class="num">$37,955</td><td class="num">$0.158</td><td class="num">3</td><td class="num">Jan 08, 2025</td></tr>
+    <tr><td class="wallet">0xf5cfe6f9…e0869fc6</td><td class="num">$36,007</td><td class="num">$0.093</td><td class="num">2</td><td class="num">Oct 16, 2024</td></tr>
+    <tr><td class="wallet">0xc4086b70…000f4675</td><td class="num">$21,768</td><td class="num">$0.120</td><td class="num">1</td><td class="num">Mar 16, 2024</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Two of these wallets — the top two — each put more than <strong>$100K</strong> to work in a single market in the 18-hour window. They concentrated the bet. They didn't spread it across the cluster of 40+ Maduro-themed contracts that opened around the press conference. They sized into one outcome, at sub-10¢ prices, in the hours before sunrise on the operation morning. We are not in a position to say who they are, and the on-chain forensics available to us cannot bridge the proxy-relayer architecture that obscures the underlying user. <strong>What we can say is that whoever they are, they sized it like they knew.</strong></p>
+
+<hr class="divider" />
+
+<h2>🕒 III. The eighteen hours</h2>
+
+<div class="timeline">
+  <div class="tl-row">
+    <div class="tl-time">Jan 2 · 12:00</div>
+    <div class="tl-event"><strong>Window opens</strong><span>YES at $0.060. Quiet day. Nothing in the news cycle suggests a Caracas operation is imminent.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 2 · 21:00</div>
+    <div class="tl-event"><strong>First volume spike</strong><span>$48K crosses in a single hour, price ticks to $0.071. Earliest detectable accumulation.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 01:00</div>
+    <div class="tl-event"><strong>🚨 Insider hour begins</strong><span>$81K in one hour at $0.073. Price still flat. The pattern is volume, not yet price.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 03:00</div>
+    <div class="tl-event"><strong>Velocity break</strong><span>251 trades in an hour, $112K, price up to $0.10. The order book starts thinning.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 05:00</div>
+    <div class="tl-event"><strong>Last quiet hour</strong><span>$166K, 201 trades, price at $0.12. The window of plausible deniability for "tape-reading" closes.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 06:00</div>
+    <div class="tl-event"><strong>💥 The leak hits</strong><span>1,368 trades, $340K, price triples to $0.34 in 60 minutes. Wire reports follow within the hour.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 09:00</div>
+    <div class="tl-event"><strong>Confirmation</strong><span>$1.6M of volume at $0.90. The market is no longer guessing.</span></div>
+  </div>
+  <div class="tl-row">
+    <div class="tl-time">Jan 3 · 10:00</div>
+    <div class="tl-event"><strong>✅ Settled</strong><span>YES at $0.997. Anyone who was going to profit from this trade already has.</span></div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<h2>🛠️ IV. Why the system worked, and what the system missed</h2>
+
+<p>Polymarket caught the Van Dyke trade because the Van Dyke trade was easy to see. He opened a Polymarket account in late December, registered it to his personal email, made roughly 13 bets across a six-day window in a market he had never previously touched, withdrew the proceeds within hours of the operation, sent them to a foreign cryptocurrency vault, and then on January 6 asked Polymarket to delete the account on the implausible grounds that he had lost access to his own email. <strong>He left a paper trail an intern could follow.</strong></p>
+
+<p>The cohort did not. 28 of the 37 wallets we identified had been operating on Polymarket for more than two months — long enough to look like normal speculator behavior, distributed enough across other markets to look like a generalist book, sized prudently enough to not trip a single-trader concentration alert.</p>
+
+<div class="callout red">
+  <div class="callout-icon">⚠️</div>
+  <div class="callout-body">
+    <p>Polymarket's compliance system is built to catch the trader who acts like a guilty trader. <strong>It is not built to catch the trader who acts like a sophisticated one.</strong></p>
+  </div>
+</div>
+
+<details class="toggle" open>
+  <summary>📋 The Method (sketched, not handed over)</summary>
+  <div class="toggle-body">
+    <p style="color: var(--text-light); font-size: 14px; margin-bottom: 8px;">A reproducible three-step framework for reading any leak event-driven binary market on-chain.</p>
+    <ol>
+      <li>Locate the <strong>flat-to-vertical</strong> price curve on a binary market and identify the regime-change hour. Volume usually breaks before price does.</li>
+      <li>Pull the YES-side acquirers — TAKER on YES outcomes, MAKER on NO outcomes — for the window stretching from 12 hours before the regime change to the first hour of acceleration.</li>
+      <li>Filter for material size and meaningful entry price. Stratify by wallet age. The fresh wallets are the indictment candidates. <strong>The existing wallets are the structural problem.</strong></li>
+    </ol>
+  </div>
+</details>
+
+<hr class="divider" />
+
+<h2>⚖️ V. The case that's coming</h2>
+
+<p>Polymarket's CEO told Axios in November that it was <em>"super cool"</em> that prediction markets create a financial incentive for insiders to leak information into the price. The Justice Department's view, articulated by SDNY U.S. Attorney Jay Clayton in yesterday's press conference, is that this incentive is a federal crime. <strong>Both statements are correct.</strong> The market does, in fact, incentivize insider participation. And that participation does, in fact, violate the Commodity Exchange Act, the wire fraud statute, and the prohibition on misuse of nonpublic government information.</p>
+
+<p>What sits between those two positions is an enforcement question, and the enforcement question is structural. The Van Dyke prosecution proves that on-chain transparency makes the cleanup possible. <strong>It does not prove that the cleanup will scale.</strong></p>
+
+<p>Every regime-change market, every Fed-decision market, every M&amp;A market, every drug-trial market, every regulatory-deadline market sits on the same architecture and produces the same residue: a flat-to-vertical curve, a window of pre-leak accumulation, and a cohort of wallets that took the same trade as the indicted defendant. Each of those cohorts is reproducible from public data with a query that takes 90 seconds to write.</p>
+
+<div class="callout">
+  <div class="callout-icon">🎯</div>
+  <div class="callout-body">
+    <p>Whether prosecutors choose to build the next 36 cases is not a technical question. It is a resourcing question, and a political one, and a question about how seriously the U.S. government wants to extend the perimeter of the Commodity Exchange Act to a venue that did not exist five years ago. <strong>The data is ready when they are.</strong></p>
+    <p>For now, the tape sits on chain. It is patient. <em>It does not delete itself when the email gets changed.</em></p>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<footer>
+  <p>© 2026 paidinfullintel</p>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+(function(){
+  const ctx = document.getElementById('leakChart').getContext('2d');
+
+  const labels = [
+    '1/2 00','1/2 03','1/2 06','1/2 09','1/2 12','1/2 15','1/2 18','1/2 21',
+    '1/3 00','1/3 01','1/3 02','1/3 03','1/3 04','1/3 05',
+    '1/3 06','1/3 07','1/3 08','1/3 09','1/3 10','1/3 11','1/3 12'
+  ];
+  const price = [
+    0.0537,0.068,0.0692,0.06,0.06,0.0501,0.0651,0.0713,
+    0.0615,0.0728,0.0809,0.1035,0.1017,0.119,
+    0.3438,0.5873,0.4275,0.8987,0.9971,0.999,0.999
+  ];
+  const volume = [
+    13695,7706,673,4295,11875,137,586,47655,
+    6647,81419,162173,112395,44882,165877,
+    339616,608545,413414,1639714,1174636,730138,354242
+  ];
+
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = 'rgba(55, 53, 47, 0.65)';
+
+  new Chart(ctx, {
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Hourly volume (USD)',
+          data: volume,
+          backgroundColor: 'rgba(55, 53, 47, 0.18)',
+          borderColor: 'rgba(55, 53, 47, 0.30)',
+          borderWidth: 1,
+          yAxisID: 'yVol',
+          order: 2
+        },
+        {
+          type: 'line',
+          label: 'YES price (VWAP)',
+          data: price,
+          borderColor: 'rgb(35, 131, 226)',
+          backgroundColor: 'rgba(35, 131, 226, 0.08)',
+          borderWidth: 2,
+          tension: 0.25,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: 'rgb(35, 131, 226)',
+          fill: true,
+          yAxisID: 'yPx',
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          align: 'end',
+          labels: { usePointStyle: true, boxWidth: 8, padding: 14, font: { size: 12 } }
+        },
+        tooltip: {
+          backgroundColor: '#fff',
+          titleColor: 'rgb(55, 53, 47)',
+          bodyColor: 'rgb(55, 53, 47)',
+          borderColor: 'rgba(55, 53, 47, 0.16)',
+          borderWidth: 1,
+          padding: 12,
+          titleFont: { size: 12, weight: '600' },
+          bodyFont:  { size: 12 },
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.dataset.yAxisID === 'yPx') return ' YES  $' + ctx.parsed.y.toFixed(4);
+              return ' VOL  $' + ctx.parsed.y.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(55, 53, 47, 0.06)', drawTicks: false },
+          ticks: { font: { size: 10 } }
+        },
+        yPx: {
+          position: 'left',
+          min: 0, max: 1,
+          grid: { color: 'rgba(55, 53, 47, 0.06)' },
+          ticks: { callback: v => '$' + v.toFixed(2) },
+          title: { display: true, text: 'YES price', font: { size: 11, weight: '600' }, color: 'rgb(35, 131, 226)' }
+        },
+        yVol: {
+          position: 'right',
+          grid: { display: false },
+          ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K' },
+          title: { display: true, text: 'Volume', font: { size: 11, weight: '600' }, color: 'rgba(55, 53, 47, 0.6)' }
+        }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
